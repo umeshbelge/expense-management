@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Expense Tracker{% endblock %}
+
+{% block content %}
+    <h2>Dashboard</h2>
+    {% if current_user.is_authenticated %}
+        <p>Welcome, {{ current_user.username }}!</p>
+
+        <div style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+            <div style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; text-align: center;">
+                <h4>Total Income</h4>
+                <p style="color: green; font-size: 1.2em;">{{ total_income | round(2) }}</p>
+            </div>
+            <div style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; text-align: center;">
+                <h4>Total Expenses</h4>
+                <p style="color: red; font-size: 1.2em;">{{ total_expenses | round(2) }}</p>
+            </div>
+            <div style="padding: 10px; border: 1px solid #ccc; border-radius: 5px; text-align: center;">
+                <h4>Current Balance</h4>
+                <p style="color: {% if current_balance >= 0 %}blue{% else %}orange{% endif %}; font-size: 1.2em;">
+                    {{ current_balance | round(2) }}
+                </p>
+            </div>
+        </div>
+
+        <p><a href="{{ url_for('main.add_transaction') }}" class="btn btn-primary">Add New Transaction</a></p>
+        <hr>
+        <h3>Your Transactions:</h3>
+        {% if transactions %}
+            <ul>
+                {% for transaction in transactions %}
+                    <li>{{ transaction.date.strftime('%Y-%m-%d') }}: {{ transaction.type }} - {{ transaction.amount }} ({{ transaction.category_ref.name }}) - {{ transaction.description }}</li>
+                {% else %}
+                    <li><em>No transactions yet.</em></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No transactions recorded yet. <a href="{{ url_for('main.add_transaction') }}">Add one now!</a></p>
+        {% endif %}
+        <hr>
+        <p><a href="{{ url_for('auth.logout') }}">Logout</a></p>
+    {% else %}
+        <p>Welcome, Guest! Please <a href="{{ url_for('auth.login') }}">login</a> to continue.</p>
+    {% endif %}
+{% endblock %}

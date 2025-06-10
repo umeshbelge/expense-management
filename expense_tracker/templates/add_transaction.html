@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %} <!-- Or your preferred method for rendering forms -->
+
+{% block title %}Add Transaction - Expense Tracker{% endblock %}
+
+{% block content %}
+    <h2>Add New Income/Expense</h2>
+    <form method="POST" action="{{ url_for('main.add_transaction') }}" novalidate>
+        {{ form.hidden_tag() }} <!-- CSRF token -->
+
+        <p>
+            {{ form.type.label }}<br>
+            {{ form.type() }}<br>
+            {% for error in form.type.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.amount.label }}<br>
+            {{ form.amount(class="form-control", placeholder="0.00") }}<br>
+            {% for error in form.amount.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.date.label }}<br>
+            {{ form.date(class="form-control") }}<br>
+            {% for error in form.date.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.category.label }}<br>
+            {{ form.category(class="form-control") }}<br>
+            {% for error in form.category.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(rows=3, class="form-control", placeholder="Optional details...") }}<br>
+            {% for error in form.description.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.payment_mode.label }}<br>
+            {{ form.payment_mode(class="form-control", placeholder="e.g., Cash, Credit Card") }}<br>
+            {% for error in form.payment_mode.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(class="btn btn-primary") }}</p>
+    </form>
+    <hr>
+    <p><a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a></p>
+{% endblock %}

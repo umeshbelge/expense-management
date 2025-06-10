@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Transaction History - Expense Tracker{% endblock %}
+
+{% block content %}
+    <h2>All Transactions</h2>
+
+    {% if transactions %}
+        <table border="1" style="width:100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr>
+                    <th style="padding: 8px; text-align: left;">Date</th>
+                    <th style="padding: 8px; text-align: left;">Type</th>
+                    <th style="padding: 8px; text-align: left;">Category</th>
+                    <th style="padding: 8px; text-align: right;">Amount</th>
+                    <th style="padding: 8px; text-align: left;">Description</th>
+                    <th style="padding: 8px; text-align: left;">Payment Mode</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                    <tr>
+                        <td style="padding: 8px;">{{ transaction.date.strftime('%Y-%m-%d') }}</td>
+                        <td style="padding: 8px;">{{ transaction.type | capitalize }}</td>
+                        <td style="padding: 8px;">{{ transaction.category_ref.name }}</td>
+                        <td style="padding: 8px; text-align: right; color: {% if transaction.type == 'income' %}green{% else %}red{% endif %};">
+                            {{ transaction.amount }}
+                        </td>
+                        <td style="padding: 8px;">{{ transaction.description if transaction.description else '-' }}</td>
+                        <td style="padding: 8px;">{{ transaction.payment_mode if transaction.payment_mode else '-' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No transactions recorded yet. <a href="{{ url_for('main.add_transaction') }}">Add one now!</a></p>
+    {% endif %}
+
+    <hr style="margin-top: 30px;">
+    <p>
+        <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a> |
+        <a href="{{ url_for('main.add_transaction') }}">Add New Transaction</a>
+    </p>
+{% endblock %}
