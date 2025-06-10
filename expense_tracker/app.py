@@ -63,9 +63,11 @@ def create_app(config_identifier="config.Config"): # Default to string path "con
         seed_initial_categories()
 
     # Register blueprints here
-    from .routes import auth_bp, main_bp # Corrected import
+    from .routes import auth_bp, main_bp
+    from .routes.category_routes import category_bp # Import category blueprint
     app.register_blueprint(auth_bp, url_prefix='/auth')
-    app.register_blueprint(main_bp, url_prefix='/') # Main blueprint can be at root
+    app.register_blueprint(main_bp, url_prefix='/')
+    app.register_blueprint(category_bp) # Will use url_prefix from blueprint definition
 
     @app.route('/')
     def index():

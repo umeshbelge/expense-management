@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %} <!-- Or your preferred method for rendering forms -->
+
+{% block title %}Manage Categories - Expense Tracker{% endblock %}
+
+{% block content %}
+    <h2>Manage Categories</h2>
+
+    <div style="margin-bottom: 30px;">
+        <h3>Add New Custom Category</h3>
+        <form method="POST" action="{{ url_for('category.manage_categories') }}" novalidate>
+            {{ form.hidden_tag() }} <!-- CSRF token -->
+            <p>
+                {{ form.name.label }}<br>
+                {{ form.name(size=30, class="form-control") }}<br>
+                {% for error in form.name.errors %}
+                    <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit(class="btn btn-primary") }}</p>
+        </form>
+    </div>
+
+    <hr>
+
+    <div>
+        <h3>Your Custom Categories</h3>
+        {% if user_categories %}
+            <ul>
+                {% for category in user_categories %}
+                    <li>{{ category.name }}
+                        <!-- Placeholder for future Edit/Delete links for custom categories -->
+                        <!-- <a href="#">Edit</a> | <a href="#">Delete</a> -->
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You haven't added any custom categories yet.</p>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <div>
+        <h3>Predefined Categories</h3>
+        {% if predefined_categories %}
+            <ul>
+                {% for category in predefined_categories %}
+                    <li>{{ category.name }} (Global)</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No predefined categories found. This might indicate an issue with initial data seeding.</p>
+        {% endif %}
+    </div>
+    <hr>
+    <p><a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a></p>
+
+{% endblock %}
