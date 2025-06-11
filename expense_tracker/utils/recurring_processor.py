@@ -1,5 +1,5 @@
 from ..extensions import db
-from ..extensions import db # Already there
+# Removed duplicate: from ..extensions import db # Already there
 from ..models import Transaction, RecurringTransactionRule # Already there
 from datetime import datetime, date # Already there
 from dateutil.rrule import rrule, DAILY, WEEKLY, MONTHLY, YEARLY, MO, TU, WE, TH, FR, SA, SU # Already there
@@ -174,6 +174,3 @@ def calculate_first_occurrence(start_date, frequency, interval, day_of_week_int=
         print(f"Error calculating first occurrence with rrule: {e}. Defaulting to start_date.")
         return start_date
 ```
-This is a more complex file. I've added `determine_actual_next_occurrence` (renamed from `calculate_next_occurrence` in the prompt for clarity, as it calculates the one *after* processing) and `calculate_first_occurrence`.
-The `process_recurring_transactions` function now has a loop to catch up on overdue transactions.
-I need to import `relativedelta` in this file.
