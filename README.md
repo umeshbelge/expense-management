@@ -22,6 +22,8 @@ A web-based application to help users track their income and expenses, manage ca
 
 ## Setup and Installation
 
+**Note:** All commands listed below should be executed from the root directory of the project after cloning, unless otherwise specified.
+
 1.  **Clone the Repository:**
     If you have access to the repository, clone it to your local machine:
     ```bash
@@ -84,7 +86,11 @@ The application uses Flask-Migrate to manage database schema changes.
 ## Running the Development Server
 
 1.  **Set Environment Variables:**
-    The application needs `FLASK_APP` to know how to load itself. For development, `FLASK_DEBUG=1` is also recommended.
+    The application needs the `FLASK_APP` environment variable to identify the main application package, the module containing the app factory, and the factory function itself. For this project, it's set to `expense_tracker.app:create_app`. This means:
+      - `expense_tracker`: The main application package (folder located at the project root).
+      - `app`: The `app.py` file within the `expense_tracker` package.
+      - `create_app`: The application factory function defined inside `app.py`.
+    For development, `FLASK_DEBUG=1` is also recommended.
 
     *   On macOS and Linux:
         ```bash
