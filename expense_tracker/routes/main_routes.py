@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
+from flask import Blueprint, render_template, redirect, url_for, flash, request, abort, jsonify
 from flask_login import login_required, current_user
 from datetime import datetime
+from sqlalchemy import func, extract # For SUM and extract
 from decimal import Decimal # Import Decimal for calculations
 
-from ..forms import TransactionForm
-from ..models import Transaction
+from ..forms import TransactionForm, TransactionFilterForm
+from ..models import Transaction, Category # Added Category
 from ..extensions import db
 
 main_bp = Blueprint('main', __name__)
@@ -54,12 +55,48 @@ def view_transactions():
     if filter_form.type.data: # filter_form.type.data will be 'income' or 'expense'
         query = query.filter(Transaction.type == filter_form.type.data)
 
+    start_date_val = filter_form.start_date.data
+    end_date_val = filter_form.end_date.data
+
+    if start_date_val:
+        query = query.filter(Transaction.date >= start_date_val)
+
+    if end_date_val:
+        query = query.filter(Transaction.date <= end_date_val)
+
+    if start_date_val and end_date_val and start_date_val > end_date_val:
+        flash('Start date cannot be after end date. Filters might not produce expected results.', 'warning')
+        # Query will likely return no results, which is acceptable.
+
     transactions = query.order_by(Transaction.date.desc()).all()
 
     return render_template('transactions.html',
                            title='Transaction History',
                            transactions=transactions,
                            filter_form=filter_form)
+
+@main_bp.route('/api/dashboard/monthly_summary_chart_data')
+@login_required
+def monthly_summary_data():
+    current_month = datetime.utcnow().month
+    current_year = datetime.utcnow().year
+
+    summary = db.session.query(
+        Category.name,
+        func.sum(Transaction.amount).label('total_spent')
+    ).join(Transaction.category_ref) \
+     .filter(Transaction.user_id == current_user.id) \
+     .filter(Transaction.type == 'expense') \
+     .filter(extract('month', Transaction.date) == current_month) \
+     .filter(extract('year', Transaction.date) == current_year) \
+     .group_by(Category.name) \
+     .order_by(func.sum(Transaction.amount).desc()) \
+     .all()
+
+    labels = [item[0] for item in summary]
+    data = [float(item[1]) for item in summary] # Chart.js expects numbers
+
+    return jsonify({'labels': labels, 'data': data})
 
 @main_bp.route('/transaction/<int:transaction_id>/edit', methods=['GET', 'POST'])
 @login_required

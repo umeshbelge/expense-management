@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block title %}Edit Category - Expense Tracker{% endblock %}
+
+{% block content %}
+    <h2>Edit Category: {{ category.name }}</h2>
+
+    <form method="POST" action="{{ url_for('category.edit_category', category_id=category.id) }}" novalidate>
+        {{ form.hidden_tag() }} <!-- CSRF token -->
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=30, class="form-control") }}<br>
+            {% for error in form.name.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.submit(value='Update Category', class="btn btn-primary") }}
+            <a href="{{ url_for('category.manage_categories') }}" class="btn btn-secondary">Cancel</a>
+        </p>
+    </form>
+    <hr>
+    <p><a href="{{ url_for('category.manage_categories') }}">Back to Manage Categories</a></p>
+{% endblock %}

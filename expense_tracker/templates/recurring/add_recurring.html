@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %} <!-- Or your preferred method for rendering forms -->
+
+{% block title %}{{ title }} - Expense Tracker{% endblock %}
+
+{% block content %}
+    <h2>{{ title }}</h2>
+    <form method="POST" action="{{ url_for('recurring.add_rule') }}" novalidate>
+        {{ form.hidden_tag() }} <!-- CSRF token -->
+
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(class="form-control", placeholder="e.g., Monthly Salary, Netflix Subscription") }}
+            {% if form.description.errors %}{% for error in form.description.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+        <p>
+            {{ form.amount.label }}<br>
+            {{ form.amount(class="form-control", placeholder="0.00") }}
+            {% if form.amount.errors %}{% for error in form.amount.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+        <p>
+            {{ form.type.label }}<br>
+            {{ form.type(class="form-control") }}
+            {% if form.type.errors %}{% for error in form.type.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+        <p>
+            {{ form.category.label }}<br>
+            {{ form.category(class="form-control") }}
+            {% if form.category.errors %}{% for error in form.category.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+        <p>
+            {{ form.payment_mode.label }} (Optional)<br>
+            {{ form.payment_mode(class="form-control", placeholder="e.g., Bank Transfer, Credit Card") }}
+            {% if form.payment_mode.errors %}{% for error in form.payment_mode.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+        <hr>
+        <h4>Frequency & Timing</h4>
+        <p>
+            {{ form.frequency.label }}<br>
+            {{ form.frequency(class="form-control") }}
+            {% if form.frequency.errors %}{% for error in form.frequency.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+        <p>
+            {{ form.interval.label }}<br>
+            {{ form.interval(class="form-control", placeholder="e.g., 1 for every period, 2 for every other period") }}
+            {% if form.interval.errors %}{% for error in form.interval.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+        <p>
+            {{ form.day_of_week.label }} (Required if frequency is 'Weekly')<br>
+            {{ form.day_of_week(class="form-control") }}
+            {% if form.day_of_week.errors %}{% for error in form.day_of_week.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+        <p>
+            {{ form.day_of_month.label }} (Required if frequency is 'Monthly' or 'Yearly')<br>
+            {{ form.day_of_month(class="form-control", placeholder="1-31") }}
+            {% if form.day_of_month.errors %}{% for error in form.day_of_month.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+        <hr>
+        <h4>Duration</h4>
+        <p>
+            {{ form.start_date.label }}<br>
+            {{ form.start_date(class="form-control") }}
+            {% if form.start_date.errors %}{% for error in form.start_date.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+        <p>
+            {{ form.end_date.label }} (Leave blank if ongoing)<br>
+            {{ form.end_date(class="form-control") }}
+            {% if form.end_date.errors %}{% for error in form.end_date.errors %}<span class="text-danger">{{ error }}</span>{% endfor %}{% endif %}
+        </p>
+
+        <p>{{ form.submit(class="btn btn-primary") }}
+           <a href="{{ url_for('recurring.list_rules') }}" class="btn btn-secondary">Cancel</a>
+        </p>
+    </form>
+{% endblock %}

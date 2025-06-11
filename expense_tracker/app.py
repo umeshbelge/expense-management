@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager, current_user
 # from config import Config # Removed direct import at module level
 # Import all models to ensure they are registered with SQLAlchemy metadata for Alembic
-from .models import User, Category, Transaction
+from .models import User, Category, Transaction, RecurringTransactionRule
 from .extensions import db, migrate, login_manager # Import extensions
 
 # db = SQLAlchemy() # Moved to extensions.py
@@ -64,10 +64,18 @@ def create_app(config_identifier="config.Config"): # Default to string path "con
 
     # Register blueprints here
     from .routes import auth_bp, main_bp
-    from .routes.category_routes import category_bp # Import category blueprint
+    from .routes.category_routes import category_bp
+    from .routes.recurring_routes import recurring_bp # Import recurring blueprint
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(main_bp, url_prefix='/')
-    app.register_blueprint(category_bp) # Will use url_prefix from blueprint definition
+    app.register_blueprint(category_bp)
+    app.register_blueprint(recurring_bp)
+
+    # Register CLI commands
+    from . import commands as app_commands
+    app.cli.add_command(app_commands.process_recurring_command)
+    # If using an init_app structure in commands.py:
+    # app_commands.init_app(app)
 
     @app.route('/')
     def index():

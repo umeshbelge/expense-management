@@ -18,7 +18,12 @@ class User(UserMixin, db.Model):
     transactions = db.relationship('Transaction', backref='user', lazy=True)
     # categories relationship can be added later if categories become more user-specific
     # categories = db.relationship('Category', backref='user', lazy=True)
-
+    recurring_rules = db.relationship(
+        'RecurringTransactionRule',
+        backref='user_ref',  # Using user_ref to avoid conflict with Transaction.user
+        lazy='dynamic',
+        cascade='all, delete-orphan'
+    )
 
     def __repr__(self):
         return f'<User {self.username}>'

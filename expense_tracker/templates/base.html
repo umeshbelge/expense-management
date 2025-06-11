@@ -14,6 +14,7 @@
                 <li><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
                 <li><a href="{{ url_for('main.view_transactions') }}">Transaction History</a></li>
                 <li><a href="{{ url_for('category.manage_categories') }}">Manage Categories</a></li>
+                <li><a href="{{ url_for('recurring.list_rules') }}">Recurring Transactions</a></li>
                 <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
             {% else %}
                 <li><a href="{{ url_for('auth.login') }}">Login</a></li>
@@ -37,6 +38,7 @@
     <footer>
         <p>&copy; 2024 Expense Tracker</p>
     </footer>
-    <!-- Add any JS links here -->
+    <!-- Common JS links can go here -->
+    {% block scripts %}{% endblock %}
 </body>
 </html>

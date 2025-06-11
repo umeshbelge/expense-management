@@ -6,3 +6,4 @@ Flask-Login
 email-validator
 python-dotenv
 WTForms-SQLAlchemy
+python-dateutil

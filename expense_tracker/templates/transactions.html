@@ -16,6 +16,14 @@
                 {{ filter_form.category.label(style="margin-right: 5px;") }}
                 {{ filter_form.category(class="form-control-sm") }}
             </div>
+            <div style="display: inline-block; margin-right: 10px;">
+                {{ filter_form.start_date.label(style="margin-right: 5px;") }}
+                {{ filter_form.start_date(class="form-control-sm") }}
+            </div>
+            <div style="display: inline-block; margin-right: 10px;">
+                {{ filter_form.end_date.label(style="margin-right: 5px;") }}
+                {{ filter_form.end_date(class="form-control-sm") }}
+            </div>
             {{ filter_form.submit(class="btn btn-sm btn-primary", style="vertical-align: bottom;") }}
              <a href="{{ url_for('main.view_transactions') }}" class="btn btn-sm btn-secondary" style="vertical-align: bottom;">Clear Filters</a>
         </form>

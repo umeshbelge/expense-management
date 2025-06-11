@@ -26,11 +26,18 @@
     <div>
         <h3>Your Custom Categories</h3>
         {% if user_categories %}
-            <ul>
-                {% for category in user_categories %}
-                    <li>{{ category.name }}
-                        <!-- Placeholder for future Edit/Delete links for custom categories -->
-                        <!-- <a href="#">Edit</a> | <a href="#">Delete</a> -->
+            <ul class="list-group">
+                {% for cat in user_categories %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ cat.name }}
+                        <span style="float: right;"> <!-- Ensure buttons are on the right -->
+                            <a href="{{ url_for('category.edit_category', category_id=cat.id) }}" class="btn btn-sm btn-outline-primary" style="margin-right: 5px;">Edit</a>
+                            <form method="POST" action="{{ url_for('category.delete_category', category_id=cat.id) }}" style="display:inline;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Are you sure you want to delete this category? This action cannot be undone.');">Delete</button>
+                            </form>
+                        </span>
                     </li>
                 {% endfor %}
             </ul>

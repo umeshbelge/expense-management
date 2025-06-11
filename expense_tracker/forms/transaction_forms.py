@@ -50,4 +50,6 @@ class TransactionFilterForm(FlaskForm):
     type = SelectField('Type',
                        choices=[('', '-- All Types --'), ('income', 'Income'), ('expense', 'Expense')],
                        default='')
+    start_date = DateField('Start Date', format='%Y-%m-%d', validators=[Optional()])
+    end_date = DateField('End Date', format='%Y-%m-%d', validators=[Optional()])
     submit = SubmitField('Filter')
